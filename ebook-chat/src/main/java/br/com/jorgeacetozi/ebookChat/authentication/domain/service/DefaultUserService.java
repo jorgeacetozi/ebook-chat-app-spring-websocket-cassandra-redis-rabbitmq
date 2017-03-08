@@ -1,7 +1,6 @@
 package br.com.jorgeacetozi.ebookChat.authentication.domain.service;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +29,7 @@ public class DefaultUserService implements UserService {
 	public User createUser(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		Role userRole = roleRepository.findByName("ROLE_USER");
-		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+		user.addRoles(Arrays.asList(userRole));
 		return userRepository.save(user);
 	}
 }

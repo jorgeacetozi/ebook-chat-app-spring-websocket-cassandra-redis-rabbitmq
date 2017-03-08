@@ -1,7 +1,8 @@
 package br.com.jorgeacetozi.ebookChat.authentication.domain.model;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +12,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
-
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -37,7 +37,18 @@ public class User {
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "username"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
+	private Set<Role> roles = new HashSet<>();
+	
+	public User () {
+		
+	}
+	
+	public User(String username, String password, String name, String email) {
+		this.username = username;
+		this.password = password;
+		this.name = name;
+		this.email = email;
+	}
 
 	public String getUsername() {
 		return username;
@@ -66,7 +77,7 @@ public class User {
 	public Set<Role> getRoles() {
 		return roles;
 	}
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+	public void addRoles(Collection<Role> roles) {
+		this.roles.addAll(roles);
 	}
 }
