@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="container">
+  		<h3 th:text="#{login.title}">Login</h3>
+  		<hr />
+  		<div id="errorMessage" th:if="${param.error}">
+        	<h4 class="alert alert-danger">Invalid user name or password</h4>
+        </div>
+		<form class="form-horizontal" method="post" action="/login">
+		<div class="form-group">
+		    <label for="username" class="col-sm-2 control-label" th:text="#{login.username}">Username</label>
+		    <div class="col-sm-5">
+		        <input type="text" id="username" name="username" class="form-control" th:placeholder="#{login.your.username}" />
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label for="password" class="col-sm-2 control-label" th:text="#{login.password}">Password</label>
+		    <div class="col-sm-5">
+		        <input type="password" class="form-control" id="password" name="password" th:placeholder="#{login.your.password}"/>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <div class="col-sm-offset-2 col-sm-4">
+		      <button type="submit" class="btn btn-default" th:text="#{login.signin}">Sign In</button>
+		      <a href="/new-account" th:text="#{login.create.account}">Or create an account</a>
+		  	</div>
+		 </div>
+		</form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>Jorge Acetozi - Ebook Chat App</title>
+    
+	<link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" media="screen,projection" />
+</head>
+<body>
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Ebook Chat App</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right" sec:authorize="isAuthenticated()">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="#{menu.language}">Language</a>
+          <ul class="dropdown-menu">
+          	<li><a id="english" href="?lang=en" th:text="#{menu.language.english}">English</a></li>
+            <li><a id="portuguese" href="?lang=pt" th:text="#{menu.language.portuguese}">Portuguese</a></li>
+          </ul>
+        </li>
+        
+        <li class="dropdown" sec:authorize="isAuthenticated()">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span sec:authentication="name"></span></a>
+          <ul class="dropdown-menu">
+          	<li><a id="disconnect" href="#" th:text="#{menu.leave.chatroom}">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+	<h3 class="text-center" th:text="|#{chatroom.title}: ${chatRoom.name}|">Awesome Chat Room</h3>
+	<hr />
+	<div class="row">
+		<div class="col-lg-3 col-sm-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title" th:text="#{chatroom.users}">Users</h1>
+				</div>
+				<div class="panel-body"
+					style="height: 350px; overflow-y: scroll;">
+					<table class="table table-hover">
+						<tbody>
+							<tr th:each="user : ${chatRoom.connectedUsers}">
+								<td th:text="${user.username}" class="users">jorge_acetozi</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="panel-footer">
+					<button id="public" type="button" class="btn btn-success" th:text="#{chatroom.public.messages}">I want to send public messages</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-9 col-sm-9">
+			<div class="panel panel-default">
+				<div id="newMessages" class="panel-body" style="height: 435px; overflow-y: scroll;">
+					<span th:each="oldMessage : ${oldMessages}">
+					
+						<p th:if="${oldMessage.fromAdmin}" class="alert alert-warning" th:text="|${oldMessage.fromUser}: ${oldMessage.text}|">
+							admin: welcome everybody!
+						</p>
+					
+						<p th:if="${oldMessage.public} and not ${oldMessage.fromAdmin}" th:text="|${oldMessage.fromUser}: ${oldMessage.text}|">
+							jorge_acetozi: hello everybody!
+						</p>
+						
+						<p th:if="${oldMessage.public == false}" class="alert alert-info" 
+						   th:text="|[private] ${oldMessage.fromUser} -> ${oldMessage.toUser}: ${oldMessage.text}|">
+							[private] jorge_acetozi -> xuxa: hello Xuxa, how are you?
+						</p>	
+					</span>
+					<hr />
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-12 col-sm-6">
+			<div class="input-group input-group-lg">
+				<span class="input-group-addon" id="sendTo">public</span> 
+				<input id="message" type="text" class="form-control" aria-describedby="sendTo" th:placeholder="#{chatroom.message.placeholder}" /> 
+				<span class="input-group-btn">
+					<button id="send" class="btn btn-default" type="button" th:text="#{chatroom.send}">Send</button>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+
+<script th:inline="javascript">
+
+$(document).ready(function() {
+	var stompClient = null;
+	var socket = null;
+	var chatRoomId = /*[[${chatRoom.id}]]*/;
+	var inputMessage = $("#message");
+	var btnSend = $("#send");
+	var btnDisconnect = $("#disconnect");
+	var newMessages = $("#newMessages");
+	var spanSendTo = $("#sendTo");
+	var btnPublic = $("#public");
+	
+	function connect() {
+		socket = new SockJS('/ws');
+
+		stompClient = Stomp.over(socket);
+		stompClient.connect({ 'chatRoomId' : chatRoomId }, function(frame) {
+			console.log('Connected: ' + frame);
+
+			stompClient.subscribe('/topic/' + chatRoomId + '/public-messages', function(message) {
+				console.log(message);
+				var instantMessage = JSON.parse(message.body);
+				
+				if (instantMessage.fromUser == "admin") {
+					newMessages
+					.append('<p class="alert alert-warning"><strong>' + instantMessage.fromUser + '</strong>: ' + 
+							instantMessage.text + '</p>')
+				} else {
+					newMessages
+						.append("<p>" + instantMessage.fromUser + ": " + instantMessage.text + "</p>")
+				}
+				
+				scrollDownMessagesPanel();
+			});
+
+			stompClient.subscribe('/user/queue/' + chatRoomId + '/private-messages', function(message) {
+				console.log(message);
+				var instantMessage = JSON.parse(message.body);
+				
+				newMessages
+				.append('<p class="alert alert-info">[private] ' + 
+						'<strong>' + instantMessage.fromUser + 
+						' <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> ' + 
+						instantMessage.toUser + '</strong>: ' + 
+						instantMessage.text + '</p>');
+				
+				scrollDownMessagesPanel();
+			});
+			
+			stompClient.subscribe('/topic/' + chatRoomId + '/connected-users', function(response) {
+				var connectedUsers = JSON.parse(response.body);
+				var $tbody = $("tbody").html("");
+				
+				$.each(connectedUsers, function(index, connectedUser) {
+					var $tr = $("<tr />");
+					var $td = $('<td />', {
+						"class" : "users",
+						"text" : connectedUser.username
+					});
+					$td.appendTo($tr);
+					$tr.appendTo($tbody);
+				});
+				
+				bindConnectedUsers();
+			});
+		});
+	}
+
+	function disconnect() {
+		if (stompClient != null) {
+			stompClient.disconnect();
+		}
+		console.log("Disconnected");
+		window.location.href = "/chat";
+	}
+
+	function sendMessage() {
+		var instantMessage;
+		if (inputMessage.val() == "") {
+			inputMessage.focus();
+			return;
+		}
+		if (spanSendTo.text() == "public") {
+			instantMessage = {
+				'text' : inputMessage.val()
+			}
+		} else {
+			instantMessage = {
+				'text' : inputMessage.val(),
+				'toUser' : spanSendTo.text()
+			}
+		}
+		stompClient.send("/chatroom/send-message", {}, JSON.stringify(instantMessage));
+		inputMessage.val("").focus();
+	}
+
+	function sendTo(e) {
+		spanSendTo.text(e.toElement.textContent);
+		inputMessage.focus();
+	}
+	
+	function checkEnter(e) {
+		var key = e.which;
+		if(key == 13) {
+		   btnSend.click();
+		   return false;  
+		}
+	}
+	
+	function scrollDownMessagesPanel() {
+		newMessages.animate({"scrollTop": newMessages[0].scrollHeight}, "fast");
+	}
+	
+	function bindConnectedUsers() {
+		$(".users").on("click", sendTo);
+	}
+	
+	inputMessage.on("keypress", checkEnter).focus();
+	btnSend.on("click", sendMessage);
+	btnDisconnect.on("click", disconnect);
+	btnPublic.on("click", function(){
+		spanSendTo.text("public");
+		inputMessage.focus();
+	})
+	
+	connect();
+	bindConnectedUsers();
+	scrollDownMessagesPanel();
+});
+</script>
+
+</body>
+</html>

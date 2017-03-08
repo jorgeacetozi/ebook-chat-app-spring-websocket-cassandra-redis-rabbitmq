@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/default">
+<head>
+</head>
+<body>
+	<div class="container" layout:fragment="content">
+	 
+		<h3 class="text-center" th:text="#{chat.available.chatrooms}">Available Chat Rooms</h3>
+		<hr />
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th th:text="#{chat.chatrooms.name}">Name</th>
+					<th th:text="#{chat.chatrooms.description}">Description</th>
+					<th th:text="#{chat.chatrooms.connectedUsers}">Connected Users</th>
+					<th></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="chatRoom : ${chatRooms}">
+					<td th:text="${chatRoom.name}">Brazil</td>
+					<td th:text="${chatRoom.description}">Meet brazilian people
+						here</td>
+					<td th:text="${#lists.size(chatRoom.connectedUsers)}">0</td>
+					<td><a th:href="|/chatroom/${chatRoom.id}|" th:text="#{chat.chatrooms.join}">Join</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="modal fade" id="newChatRoomModal" tabindex="-1"
+			role="dialog" aria-labelledby="newChatRoomModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="newChatRoomModalLabel" th:text="#{chat.new.chatroom.title}">New Chat Room</h4>
+					</div>
+					<div class="modal-body">
+						<form>
+							<div class="form-group">
+								<label for="newChatroomName" class="control-label" th:text="#{chat.new.chatroom.name}">Name</label>
+								<input type="text" class="form-control" id="newChatroomName" />
+							</div>
+							<div class="form-group">
+								<label for="newChatRoomDescription" class="control-label" th:text="#{chat.new.chatroom.description}">Description</label>
+								<textarea class="form-control" id="newChatRoomDescription"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{chat.new.chatroom.close}">Close</button>
+						<button id="btnCreateNewChatRoom" type="button"	class="btn btn-primary" th:text="#{chat.new.chatroom.create}">Create</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script layout:fragment="script">
+		$(document).ready(function() {
+
+			var newChatRoomModal = $("#newChatRoomModal");
+			var btnCreateNewChatRoom = $("#btnCreateNewChatRoom");
+			var txtNewChatRoomName = $("#newChatroomName");
+			var txtNewChatRoomDescription = $("#newChatRoomDescription");
+
+			function createNewChatRoom() {
+				var newChatRoom = {
+					'name' : txtNewChatRoomName.val(),
+					'description' : txtNewChatRoomDescription.val()
+				};
+
+				$.ajax({
+					type : "POST",
+					url : "/chatroom",
+					data : JSON.stringify(newChatRoom),
+					contentType : "application/json",
+					success : function(chatRoom) {
+						var $tbody = $("tbody");
+						var $tr = $("<tr />");
+
+						$("<td />").text(chatRoom.name).appendTo($tr);
+						$("<td />").text(chatRoom.description).appendTo($tr);
+						$("<td />").text("0").appendTo($tr);
+
+						var join = $('<a />', {
+							"href" : "/chatroom/" + chatRoom.id,
+							"text" : "Join"
+						});
+
+						$("<td />").append(join).appendTo($tr);
+						$tr.appendTo($tbody);
+						newChatRoomModal.modal('hide');
+					},
+				});
+			}
+			btnCreateNewChatRoom.on("click", createNewChatRoom);
+		})
+	</script>
+
+</body>
+</html>

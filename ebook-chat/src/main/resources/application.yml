@@ -1,0 +1,72 @@
+spring.profiles.active: dev
+
+---
+
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/ebook_chat
+    username: root
+    password: root
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  session:
+    store-type: redis  
+  thymeleaf:
+    cache: false
+  messages:
+    cache-seconds: 0
+  redis:
+    host: localhost
+    port: 6379
+  data:
+    redis:
+      repositories:
+        enabled: true
+    cassandra:
+      contact-points: localhost
+      port: 9042
+      keyspace-name: ebook_chat
+      schema-action: CREATE_IF_NOT_EXISTS
+
+flyway.enabled: true      
+security.headers.cache: false 
+server.session.timeout: 600
+
+---
+
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://localhost:3306/ebook_chat
+    username: root
+    password: root
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  session:
+    store-type: redis
+  redis:
+    host: localhost
+    port: 6379
+  data:
+    redis:
+      repositories:
+        enabled: true
+
+flyway.enabled: true
