@@ -34,8 +34,7 @@ public class RedisChatRoomService implements ChatRoomService {
 	}
 
 	@Override
-	public ChatRoom join(ChatRoomUser joiningUser, String chatRoomId) {
-		ChatRoom chatRoom = chatRoomRepository.findOne(chatRoomId);
+	public ChatRoom join(ChatRoomUser joiningUser, ChatRoom chatRoom) {
 		chatRoom.addUser(joiningUser);
 		chatRoomRepository.save(chatRoom);
 
@@ -45,10 +44,9 @@ public class RedisChatRoomService implements ChatRoomService {
 	}
 
 	@Override
-	public ChatRoom leave(ChatRoomUser leavingUser, String chatRoomId) {
-		sendPublicMessage(SystemMessages.goodbye(chatRoomId, leavingUser.getUsername()));
+	public ChatRoom leave(ChatRoomUser leavingUser, ChatRoom chatRoom) {
+		sendPublicMessage(SystemMessages.goodbye(chatRoom.getId(), leavingUser.getUsername()));
 		
-		ChatRoom chatRoom = chatRoomRepository.findOne(chatRoomId);
 		chatRoom.removeUser(leavingUser);
 		chatRoomRepository.save(chatRoom);
 		

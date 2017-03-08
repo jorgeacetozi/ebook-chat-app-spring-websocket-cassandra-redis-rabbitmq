@@ -20,7 +20,7 @@ public class WebSocketEvents {
 		headers.getSessionAttributes().put("chatRoomId", chatRoomId);
 		ChatRoomUser joiningUser = new ChatRoomUser(event.getUser().getName());
 		
-		chatRoomService.join(joiningUser, chatRoomId);
+		chatRoomService.join(joiningUser, chatRoomService.findById(chatRoomId));
 	}
 
 	@EventListener
@@ -29,6 +29,6 @@ public class WebSocketEvents {
 		String chatRoomId = headers.getSessionAttributes().get("chatRoomId").toString();
 		ChatRoomUser leavingUser = new ChatRoomUser(event.getUser().getName());
 
-		chatRoomService.leave(leavingUser, chatRoomId);
+		chatRoomService.leave(leavingUser, chatRoomService.findById(chatRoomId));
 	}
 }

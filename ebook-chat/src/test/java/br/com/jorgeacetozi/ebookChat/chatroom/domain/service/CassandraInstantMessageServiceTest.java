@@ -55,7 +55,7 @@ public class CassandraInstantMessageServiceTest {
 		final ChatRoomUser jorgeAcetozi = new ChatRoomUser("jorge_acetozi");
 		List<InstantMessage> jorgeAcetoziMessages;
 		
-		chatRoomService.join(jorgeAcetozi, chatRoom.getId());
+		chatRoomService.join(jorgeAcetozi, chatRoom);
 		
 		jorgeAcetoziMessages = instantMessageService.findAllInstantMessagesFor("jorge_acetozi", "123");
 		assertThat(jorgeAcetoziMessages.size(), is((1)));
@@ -68,7 +68,7 @@ public class CassandraInstantMessageServiceTest {
 		assertThat(welcomeMessage.getToUser(), is(nullValue()));
 		assertThat(welcomeMessage.getText(), is(SystemMessages.welcome(chatRoom.getId(), jorgeAcetozi.getUsername()).getText()));
 		
-		chatRoomService.leave(jorgeAcetozi, chatRoom.getId());
+		chatRoomService.leave(jorgeAcetozi, chatRoom);
 		
 		jorgeAcetoziMessages = instantMessageService.findAllInstantMessagesFor(jorgeAcetozi.getUsername(), chatRoom.getId());
 		assertThat(jorgeAcetoziMessages.size(), is((2)));
@@ -83,11 +83,11 @@ public class CassandraInstantMessageServiceTest {
 	}
 	
 	@Test
-	public void shouldStoreEntireConversationWithPublicMessage() throws InterruptedException {
+	public void shouldStoreEntireConversationWithPublicMessage() {
 		final ChatRoomUser jorgeAcetozi = new ChatRoomUser("jorge_acetozi");
 		List<InstantMessage> jorgeAcetoziMessages;
 		
-		chatRoomService.join(jorgeAcetozi, chatRoom.getId());
+		chatRoomService.join(jorgeAcetozi, chatRoom);
 		
 		InstantMessage publicMessage = new InstantMessageBuilder()
 				.newMessage()
@@ -97,7 +97,7 @@ public class CassandraInstantMessageServiceTest {
 				.withText("There's no people to chat with me here... I'm leaving now :(");
 
 		chatRoomService.sendPublicMessage(publicMessage);
-		chatRoomService.leave(jorgeAcetozi, chatRoom.getId());
+		chatRoomService.leave(jorgeAcetozi, chatRoom);
 		
 		jorgeAcetoziMessages = instantMessageService.findAllInstantMessagesFor(jorgeAcetozi.getUsername(), chatRoom.getId());
 		assertThat(jorgeAcetoziMessages.size(), is((3)));
@@ -118,13 +118,13 @@ public class CassandraInstantMessageServiceTest {
 	}
 	
 	@Test
-	public void shouldStoreEntireConversationWithPrivateMessages() throws InterruptedException {
+	public void shouldStoreEntireConversationWithPrivateMessages() {
 		final ChatRoomUser jorgeAcetozi = new ChatRoomUser("jorge_acetozi");
 		final ChatRoomUser johnPetrucci = new ChatRoomUser("john_petrucci");
 		List<InstantMessage> jorgeAcetoziMessages, johnPetrucciMessages;
 		
-		chatRoomService.join(jorgeAcetozi, chatRoom.getId());
-		chatRoomService.join(johnPetrucci, chatRoom.getId());
+		chatRoomService.join(jorgeAcetozi, chatRoom);
+		chatRoomService.join(johnPetrucci, chatRoom);
 		
 		InstantMessage privateMessageOne = new InstantMessageBuilder()
 				.newMessage()
@@ -144,8 +144,8 @@ public class CassandraInstantMessageServiceTest {
 				.withText("Of course! That's so easy...");
 		chatRoomService.sendPrivateMessage(privateMessageTwo);
 		
-		chatRoomService.leave(jorgeAcetozi, chatRoom.getId());
-		chatRoomService.leave(johnPetrucci, chatRoom.getId());
+		chatRoomService.leave(jorgeAcetozi, chatRoom);
+		chatRoomService.leave(johnPetrucci, chatRoom);
 		
 		jorgeAcetoziMessages = instantMessageService.findAllInstantMessagesFor(jorgeAcetozi.getUsername(), chatRoom.getId());
 		assertThat(jorgeAcetoziMessages.size(), is((5)));
