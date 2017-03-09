@@ -3,6 +3,7 @@ package br.com.jorgeacetozi.ebookChat.chatroom.api;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.ChatRoom;
@@ -32,6 +34,7 @@ public class ChatRoomController {
 	@Secured("ROLE_ADMIN")
 	@RequestMapping(path="/chatroom", method=RequestMethod.POST)
 	@ResponseBody
+	@ResponseStatus(code = HttpStatus.CREATED)
 	public ChatRoom createChatRoom(@RequestBody ChatRoom chatRoom) {
 		return chatRoomService.save(chatRoom);
 	}
