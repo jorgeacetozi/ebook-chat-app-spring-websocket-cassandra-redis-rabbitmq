@@ -55,7 +55,7 @@ public class ChatRoom {
 	public void removeUser(ChatRoomUser user) {
 		this.connectedUsers.remove(user);
 	}
-	public Integer getNumberOfConnectedUsers(){
+	public int getNumberOfConnectedUsers(){
 		return this.connectedUsers.size();
 	}
 }
