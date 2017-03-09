@@ -1,4 +1,4 @@
-package br.com.jorgeacetozi.ebookChat.test;
+package br.com.jorgeacetozi.ebookChat.integrationTests.test;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

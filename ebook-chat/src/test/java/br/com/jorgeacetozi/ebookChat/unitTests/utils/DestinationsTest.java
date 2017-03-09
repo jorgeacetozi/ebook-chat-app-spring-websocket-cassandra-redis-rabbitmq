@@ -1,9 +1,11 @@
-package br.com.jorgeacetozi.ebookChat.utils;
+package br.com.jorgeacetozi.ebookChat.unitTests.utils;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import org.junit.Test;
+
+import br.com.jorgeacetozi.ebookChat.utils.Destinations;
 
 public class DestinationsTest {
 	

@@ -1,4 +1,4 @@
-package br.com.jorgeacetozi.ebookChat.test;
+package br.com.jorgeacetozi.ebookChat.integrationTests.test;
 
 import org.junit.ClassRule;
 import org.testcontainers.containers.FixedHostPortGenericContainer;

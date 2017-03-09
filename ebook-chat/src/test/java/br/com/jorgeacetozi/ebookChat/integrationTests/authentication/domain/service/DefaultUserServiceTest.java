@@ -1,4 +1,4 @@
-package br.com.jorgeacetozi.ebookChat.authentication.domain.service;
+package br.com.jorgeacetozi.ebookChat.integrationTests.authentication.domain.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -11,7 +11,8 @@ import br.com.jorgeacetozi.ebookChat.authentication.domain.model.Role;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.model.User;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.repository.RoleRepository;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.repository.UserRepository;
-import br.com.jorgeacetozi.ebookChat.test.EbookChatTest;
+import br.com.jorgeacetozi.ebookChat.authentication.domain.service.UserService;
+import br.com.jorgeacetozi.ebookChat.integrationTests.test.EbookChatTest;
 
 @RunWith(SpringRunner.class)
 @EbookChatTest

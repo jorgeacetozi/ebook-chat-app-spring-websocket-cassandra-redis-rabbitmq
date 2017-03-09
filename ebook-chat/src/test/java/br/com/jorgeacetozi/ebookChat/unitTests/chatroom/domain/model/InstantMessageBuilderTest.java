@@ -1,4 +1,4 @@
-package br.com.jorgeacetozi.ebookChat.chatroom.domain.model;
+package br.com.jorgeacetozi.ebookChat.unitTests.chatroom.domain.model;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
@@ -6,6 +6,8 @@ import static org.hamcrest.core.Is.is;
 
 import org.junit.Test;
 
+import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.InstantMessage;
+import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.InstantMessageBuilder;
 import br.com.jorgeacetozi.ebookChat.utils.SystemUsers;
 
 public class InstantMessageBuilderTest {

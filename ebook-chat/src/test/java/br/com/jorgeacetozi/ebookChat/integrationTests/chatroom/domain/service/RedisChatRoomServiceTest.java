@@ -1,4 +1,4 @@
-package br.com.jorgeacetozi.ebookChat.chatroom.domain.service;
+package br.com.jorgeacetozi.ebookChat.integrationTests.chatroom.domain.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -13,7 +13,8 @@ import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.ChatRoom;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.ChatRoomUser;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.repository.ChatRoomRepository;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.repository.InstantMessageRepository;
-import br.com.jorgeacetozi.ebookChat.test.EbookChatTest;
+import br.com.jorgeacetozi.ebookChat.chatroom.domain.service.ChatRoomService;
+import br.com.jorgeacetozi.ebookChat.integrationTests.test.EbookChatTest;
 
 @RunWith(SpringRunner.class)
 @EbookChatTest

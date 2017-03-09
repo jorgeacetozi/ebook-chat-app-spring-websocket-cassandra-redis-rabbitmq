@@ -1,4 +1,4 @@
-package br.com.jorgeacetozi.ebookChat.authentication.api;
+package br.com.jorgeacetozi.ebookChat.integrationTests.authentication.api;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
@@ -20,7 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.model.User;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.repository.UserRepository;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.service.UserService;
-import br.com.jorgeacetozi.ebookChat.test.EbookChatTest;
+import br.com.jorgeacetozi.ebookChat.integrationTests.test.EbookChatTest;
 
 @RunWith(SpringRunner.class)
 @EbookChatTest

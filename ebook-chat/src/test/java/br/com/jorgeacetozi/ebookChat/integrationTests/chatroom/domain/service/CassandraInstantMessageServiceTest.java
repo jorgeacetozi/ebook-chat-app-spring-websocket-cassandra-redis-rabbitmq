@@ -1,4 +1,4 @@
-package br.com.jorgeacetozi.ebookChat.chatroom.domain.service;
+package br.com.jorgeacetozi.ebookChat.integrationTests.chatroom.domain.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
@@ -16,7 +16,9 @@ import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.InstantMessage;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.InstantMessageBuilder;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.repository.ChatRoomRepository;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.repository.InstantMessageRepository;
-import br.com.jorgeacetozi.ebookChat.test.EbookChatTest;
+import br.com.jorgeacetozi.ebookChat.chatroom.domain.service.ChatRoomService;
+import br.com.jorgeacetozi.ebookChat.chatroom.domain.service.InstantMessageService;
+import br.com.jorgeacetozi.ebookChat.integrationTests.test.EbookChatTest;
 import br.com.jorgeacetozi.ebookChat.utils.SystemMessages;
 import br.com.jorgeacetozi.ebookChat.utils.SystemUsers;
 

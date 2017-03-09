@@ -1,4 +1,4 @@
-package br.com.jorgeacetozi.ebookChat.chatroom.api;
+package br.com.jorgeacetozi.ebookChat.integrationTests.chatroom.api;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -23,7 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.ChatRoom;
-import br.com.jorgeacetozi.ebookChat.test.EbookChatTest;
+import br.com.jorgeacetozi.ebookChat.integrationTests.test.EbookChatTest;
 
 @RunWith(SpringRunner.class)
 @EbookChatTest
