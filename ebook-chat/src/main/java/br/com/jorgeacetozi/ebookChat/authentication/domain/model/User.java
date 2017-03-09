@@ -3,7 +3,6 @@ package br.com.jorgeacetozi.ebookChat.authentication.domain.model;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -35,7 +34,7 @@ public class User {
 	@NotEmpty
 	private String email;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "username"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 	
