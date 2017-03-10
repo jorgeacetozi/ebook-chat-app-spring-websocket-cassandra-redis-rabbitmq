@@ -59,8 +59,8 @@ public class RedisChatRoomServiceTest {
 		ChatRoom dreamTheaterChatRoom = chatRoomService.findById(chatRoom.getId());
 		List<ChatRoomUser> connectedUsers = dreamTheaterChatRoom.getConnectedUsers();
 		
-		assertThat(connectedUsers.contains(jorgeAcetozi), is(Boolean.TRUE));
-		assertThat(connectedUsers.contains(johnPetrucci), is(Boolean.TRUE));
+		assertThat(connectedUsers.contains(jorgeAcetozi), is(true));
+		assertThat(connectedUsers.contains(johnPetrucci), is(true));
 	}
 	
 	@Test
