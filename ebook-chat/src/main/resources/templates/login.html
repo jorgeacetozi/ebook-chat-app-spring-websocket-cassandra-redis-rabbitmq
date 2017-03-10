@@ -11,7 +11,7 @@
   		<h3 th:text="#{login.title}">Login</h3>
   		<hr />
   		<div id="errorMessage" th:if="${param.error}">
-        	<h4 class="alert alert-danger">Invalid user name or password</h4>
+        	<h4 class="alert alert-danger" th:text="#{login.badCredentials}"></h4>
         </div>
 		<form class="form-horizontal" method="post" action="/login">
 		<div class="form-group">

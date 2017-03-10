@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import br.com.jorgeacetozi.ebookChat.authentication.domain.exception.UserNotFoundException;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.model.Role;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.model.User;
 import br.com.jorgeacetozi.ebookChat.authentication.domain.repository.UserRepository;
@@ -25,16 +24,16 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findOne(username);
-        
-        if (user == null) {
-        	throw new UserNotFoundException("User not found");
-        }
-        
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRoles()){
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
+        if (user == null) {
+        	throw new UsernameNotFoundException("User not found");
+        } else {
+	        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+	        for (Role role : user.getRoles()){
+	            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+	        }
+	
+	        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
+        }
     }
 }
