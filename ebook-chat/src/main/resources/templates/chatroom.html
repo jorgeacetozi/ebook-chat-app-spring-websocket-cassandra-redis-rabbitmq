@@ -44,7 +44,7 @@
   </div>
 </nav>
 
-<div class="container">
+<div class="container" style="margin-top: 70px;">
 	<h3 class="text-center" th:text="|#{chatroom.title}: ${chatRoom.name}|">Awesome Chat Room</h3>
 	<hr />
 	<div class="row">
@@ -57,9 +57,7 @@
 					style="height: 350px; overflow-y: scroll;">
 					<table class="table table-hover">
 						<tbody>
-							<tr th:each="user : ${chatRoom.connectedUsers}">
-								<td th:text="${user.username}" class="users">jorge_acetozi</td>
-							</tr>
+
 						</tbody>
 					</table>
 				</div>
@@ -73,22 +71,7 @@
 		<div class="col-lg-9 col-sm-9">
 			<div class="panel panel-default">
 				<div id="newMessages" class="panel-body" style="height: 435px; overflow-y: scroll;">
-					<span th:each="oldMessage : ${oldMessages}">
-					
-						<p th:if="${oldMessage.fromAdmin}" class="alert alert-warning" th:text="|${oldMessage.fromUser}: ${oldMessage.text}|">
-							admin: welcome everybody!
-						</p>
-					
-						<p th:if="${oldMessage.public} and not ${oldMessage.fromAdmin}" th:text="|${oldMessage.fromUser}: ${oldMessage.text}|">
-							jorge_acetozi: hello everybody!
-						</p>
-						
-						<p th:if="${oldMessage.public == false}" class="alert alert-info" 
-						   th:text="|[private] ${oldMessage.fromUser} -> ${oldMessage.toUser}: ${oldMessage.text}|">
-							[private] jorge_acetozi -> xuxa: hello Xuxa, how are you?
-						</p>	
-					</span>
-					<hr />
+
 				</div>
 			</div>
 		</div>
@@ -108,6 +91,7 @@
 <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
 <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+<script src="/webjars/noty/2.2.4/jquery.noty.packaged.min.js"></script>
 
 <script th:inline="javascript">
 
@@ -124,74 +108,106 @@ $(document).ready(function() {
 	
 	function connect() {
 		socket = new SockJS('/ws');
-
 		stompClient = Stomp.over(socket);
-		stompClient.connect({ 'chatRoomId' : chatRoomId }, function(frame) {
-			console.log('Connected: ' + frame);
-
-			stompClient.subscribe('/topic/' + chatRoomId + '/public-messages', function(message) {
-				console.log(message);
-				var instantMessage = JSON.parse(message.body);
-				
-				if (instantMessage.fromUser == "admin") {
-					newMessages
-					.append('<p class="alert alert-warning"><strong>' + instantMessage.fromUser + '</strong>: ' + 
-							instantMessage.text + '</p>')
-				} else {
-					newMessages
-						.append("<p>" + instantMessage.fromUser + ": " + instantMessage.text + "</p>")
-				}
-				
-				scrollDownMessagesPanel();
-			});
-
-			stompClient.subscribe('/user/queue/' + chatRoomId + '/private-messages', function(message) {
-				console.log(message);
-				var instantMessage = JSON.parse(message.body);
-				
-				newMessages
-				.append('<p class="alert alert-info">[private] ' + 
-						'<strong>' + instantMessage.fromUser + 
-						' <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> ' + 
-						instantMessage.toUser + '</strong>: ' + 
-						instantMessage.text + '</p>');
-				
-				scrollDownMessagesPanel();
-			});
-			
-			stompClient.subscribe('/topic/' + chatRoomId + '/connected-users', function(response) {
-				var connectedUsers = JSON.parse(response.body);
-				var $tbody = $("tbody").html("");
-				
-				$.each(connectedUsers, function(index, connectedUser) {
-					var $tr = $("<tr />");
-					var $td = $('<td />', {
-						"class" : "users",
-						"text" : connectedUser.username
-					});
-					$td.appendTo($tr);
-					$tr.appendTo($tbody);
-				});
-				
-				bindConnectedUsers();
-			});
-		});
+		stompClient.connect({ 'chatRoomId' : chatRoomId }, stompSuccess, stompFailure);
 	}
-
+	
+	function stompSuccess(frame) {
+		enableInputMessage();
+		successMessage("Your WebSocket connection was successfuly established!")
+		
+		stompClient.subscribe('/chatroom/connected-users', updateConnectedUsers);
+		stompClient.subscribe('/chatroom/old-messages', oldMessages);
+		
+		stompClient.subscribe('/topic/' + chatRoomId + '/public-messages', publicMessages);
+		stompClient.subscribe('/user/queue/' + chatRoomId + '/private-messages', privateMessages);
+		stompClient.subscribe('/topic/' + chatRoomId + '/connected-users', updateConnectedUsers);
+	}
+	
+	function stompFailure(error) {
+		errorMessage("Lost connection to WebSocket! Reconnecting in 10 seconds...");
+		disableInputMessage();
+	    setTimeout(connect, 10000);
+	}
+	
 	function disconnect() {
 		if (stompClient != null) {
 			stompClient.disconnect();
 		}
-		console.log("Disconnected");
 		window.location.href = "/chat";
 	}
-
+	
+	function updateConnectedUsers(response) {
+		var connectedUsers = JSON.parse(response.body);
+		var $tbody = $("tbody").html("");
+		
+		$.each(connectedUsers, function(index, connectedUser) {
+			var $tr = $("<tr />");
+			var $td = $('<td />', {
+				"class" : "users",
+				"text" : connectedUser.username
+			});
+			$td.appendTo($tr);
+			$tr.appendTo($tbody);
+		});
+		
+		bindConnectedUsers();
+	}
+	
+	function oldMessages(response) {
+		var instantMessages = JSON.parse(response.body);
+		
+		$.each(instantMessages, function(index, instantMessage) {
+			if (instantMessage.public == true) {
+				appendPublicMessage(instantMessage);
+			} else {
+				appendPrivateMessage(instantMessage);
+			}
+		});
+		
+		scrollDownMessagesPanel();
+	}
+	
+	function publicMessages(message) {
+		var instantMessage = JSON.parse(message.body);
+		appendPublicMessage(instantMessage);
+		scrollDownMessagesPanel();
+	}
+	
+	function appendPublicMessage(instantMessage) {
+		if (instantMessage.fromUser == "admin") {
+			newMessages
+			.append('<p class="alert alert-warning"><strong>' + instantMessage.fromUser + '</strong>: ' + 
+					instantMessage.text + '</p>')
+		} else {
+			newMessages
+				.append("<p>" + instantMessage.fromUser + ": " + instantMessage.text + "</p>")
+		}
+	}
+	
+	function privateMessages(message) {
+		var instantMessage = JSON.parse(message.body);
+		appendPrivateMessage(instantMessage);
+		scrollDownMessagesPanel();
+	}
+	
+	function appendPrivateMessage(instantMessage) {
+		newMessages
+		.append('<p class="alert alert-info">[private] ' + 
+				'<strong>' + instantMessage.fromUser + 
+				' <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> ' + 
+				instantMessage.toUser + '</strong>: ' + 
+				instantMessage.text + '</p>');
+	}
+	
 	function sendMessage() {
 		var instantMessage;
-		if (inputMessage.val() == "") {
+		
+		if (inputMessageIsEmpty()) {
 			inputMessage.focus();
 			return;
 		}
+
 		if (spanSendTo.text() == "public") {
 			instantMessage = {
 				'text' : inputMessage.val()
@@ -204,6 +220,10 @@ $(document).ready(function() {
 		}
 		stompClient.send("/chatroom/send-message", {}, JSON.stringify(instantMessage));
 		inputMessage.val("").focus();
+	}
+	
+	function inputMessageIsEmpty() {
+		return inputMessage.val() == "";
 	}
 
 	function sendTo(e) {
@@ -227,6 +247,32 @@ $(document).ready(function() {
 		$(".users").on("click", sendTo);
 	}
 	
+	function enableInputMessage() {
+		inputMessage.prop("disabled", false);
+	}
+	
+	function disableInputMessage() {
+		inputMessage.prop("disabled", true);
+	}
+	
+	function successMessage(msg){
+        noty({
+            text: msg,
+            layout: 'top',
+            type: 'success',
+            timeout: 5000
+        });
+	}
+	
+	function errorMessage(msg){
+        noty({
+            text: msg,
+            layout: 'top',
+            type: 'error',
+            timeout: 5000
+        });
+	}
+	
 	inputMessage.on("keypress", checkEnter).focus();
 	btnSend.on("click", sendMessage);
 	btnDisconnect.on("click", disconnect);
@@ -238,6 +284,7 @@ $(document).ready(function() {
 	connect();
 	bindConnectedUsers();
 	scrollDownMessagesPanel();
+	disableInputMessage();
 });
 </script>
 
