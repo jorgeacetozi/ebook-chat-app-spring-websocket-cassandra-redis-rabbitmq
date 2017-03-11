@@ -13,16 +13,16 @@ public class DestinationsTest {
 	
 	@Test
 	public void shouldGetPublicMessagesDestination() {
-		assertThat(Destinations.ChatRoom.publicMessages("123"), is("/topic/" + chatRoomId + "/public-messages"));
+		assertThat(Destinations.ChatRoom.publicMessages("123"), is("/topic/" + chatRoomId + ".public.messages"));
 	}
 
 	@Test
 	public void shouldGetPrivateMessagesDestination() {
-		assertThat(Destinations.ChatRoom.privateMessages("123"), is("/queue/" + chatRoomId + "/private-messages"));
+		assertThat(Destinations.ChatRoom.privateMessages("123"), is("/queue/" + chatRoomId + ".private.messages"));
 	}
 	
 	@Test
 	public void shouldGetConnectedUsersDestination() {
-		assertThat(Destinations.ChatRoom.connectedUsers("123"), is("/topic/" + chatRoomId + "/connected-users"));
+		assertThat(Destinations.ChatRoom.connectedUsers("123"), is("/topic/" + chatRoomId + ".connected.users"));
 	}
 }

@@ -41,6 +41,12 @@ flyway.enabled: true
 security.headers.cache: false 
 server.session.timeout: 600
 
+ebook:
+  chat:
+    relay:
+      host: localhost
+      port: 61613
+
 ---
 
 spring:
@@ -70,3 +76,9 @@ spring:
         enabled: true
 
 flyway.enabled: true
+
+ebook:
+  chat:
+    relay:
+      host: localhost
+      port: 61613

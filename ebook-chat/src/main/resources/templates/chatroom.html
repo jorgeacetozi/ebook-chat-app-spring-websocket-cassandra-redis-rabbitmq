@@ -90,7 +90,7 @@
 <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
-<script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.4/lib/stomp.min.js"></script>
 <script src="/webjars/noty/2.2.4/jquery.noty.packaged.min.js"></script>
 
 <script th:inline="javascript">
@@ -116,12 +116,12 @@ $(document).ready(function() {
 		enableInputMessage();
 		successMessage("Your WebSocket connection was successfuly established!")
 		
-		stompClient.subscribe('/chatroom/connected-users', updateConnectedUsers);
-		stompClient.subscribe('/chatroom/old-messages', oldMessages);
+		stompClient.subscribe('/chatroom/connected.users', updateConnectedUsers);
+		stompClient.subscribe('/chatroom/old.messages', oldMessages);
 		
-		stompClient.subscribe('/topic/' + chatRoomId + '/public-messages', publicMessages);
-		stompClient.subscribe('/user/queue/' + chatRoomId + '/private-messages', privateMessages);
-		stompClient.subscribe('/topic/' + chatRoomId + '/connected-users', updateConnectedUsers);
+		stompClient.subscribe('/topic/' + chatRoomId + '.public.messages', publicMessages);
+		stompClient.subscribe('/user/queue/' + chatRoomId + '.private.messages', privateMessages);
+		stompClient.subscribe('/topic/' + chatRoomId + '.connected.users', updateConnectedUsers);
 	}
 	
 	function stompFailure(error) {
@@ -218,7 +218,7 @@ $(document).ready(function() {
 				'toUser' : spanSendTo.text()
 			}
 		}
-		stompClient.send("/chatroom/send-message", {}, JSON.stringify(instantMessage));
+		stompClient.send("/chatroom/send.message", {}, JSON.stringify(instantMessage));
 		inputMessage.val("").focus();
 	}
 	

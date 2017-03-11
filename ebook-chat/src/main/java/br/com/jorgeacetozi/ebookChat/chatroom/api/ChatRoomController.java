@@ -49,20 +49,20 @@ public class ChatRoomController {
 		return modelAndView;
 	}
 
-	@SubscribeMapping("/connected-users")
+	@SubscribeMapping("/connected.users")
 	public List<ChatRoomUser> listChatRoomConnectedUsersOnSubscribe(SimpMessageHeaderAccessor headerAccessor) {
 		String chatRoomId = headerAccessor.getSessionAttributes().get("chatRoomId").toString();
 		return chatRoomService.findById(chatRoomId).getConnectedUsers();
 	}
 
-	@SubscribeMapping("/old-messages")
+	@SubscribeMapping("/old.messages")
 	public List<InstantMessage> listOldMessagesFromUserOnSubscribe(Principal principal,
 			SimpMessageHeaderAccessor headerAccessor) {
 		String chatRoomId = headerAccessor.getSessionAttributes().get("chatRoomId").toString();
 		return instantMessageService.findAllInstantMessagesFor(principal.getName(), chatRoomId);
 	}
 
-	@MessageMapping("/send-message")
+	@MessageMapping("/send.message")
 	public void sendMessage(@Payload InstantMessage instantMessage, Principal principal,
 			SimpMessageHeaderAccessor headerAccessor) {
 		String chatRoomId = headerAccessor.getSessionAttributes().get("chatRoomId").toString();
