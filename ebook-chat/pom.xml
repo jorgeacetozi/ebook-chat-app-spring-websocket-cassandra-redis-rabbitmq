@@ -5,7 +5,7 @@
 
 	<groupId>br.com.jorgeacetozi</groupId>
 	<artifactId>ebook-chat</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>Jorge Acetozi - eBook Chat Application</name>
