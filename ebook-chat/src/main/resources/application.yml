@@ -31,11 +31,6 @@ spring:
     redis:
       repositories:
         enabled: true
-    cassandra:
-      contact-points: localhost
-      port: 9042
-      keyspace-name: ebook_chat
-      schema-action: CREATE_IF_NOT_EXISTS
 
 flyway.enabled: true      
 security.headers.cache: false 

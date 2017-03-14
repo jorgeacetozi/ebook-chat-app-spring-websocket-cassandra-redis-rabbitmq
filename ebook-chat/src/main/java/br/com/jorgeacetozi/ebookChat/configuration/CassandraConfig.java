@@ -10,7 +10,7 @@ import org.springframework.data.cassandra.config.java.AbstractCassandraConfigura
 import org.springframework.data.cassandra.mapping.BasicCassandraMappingContext;
 import org.springframework.data.cassandra.mapping.CassandraMappingContext;
 
-@Profile("test")
+@Profile({"dev","test"})
 @Configuration
 public class CassandraConfig extends AbstractCassandraConfiguration {
  
