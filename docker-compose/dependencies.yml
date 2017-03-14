@@ -1,0 +1,25 @@
+version: '3'
+services:
+  redis:
+    image: "redis:3.0.6"
+    ports:
+      - "6379:6379"
+  cassandra:
+    image: "cassandra:3.0"
+    ports:
+      - "9042:9042"
+    network_mode: "host"
+  mysql:
+    image: "mysql:5.7"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ebook_chat
+  rabbitmq-stomp:
+    image: "jorgeacetozi/rabbitmq-stomp:3.6"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "61613:61613"
+      
