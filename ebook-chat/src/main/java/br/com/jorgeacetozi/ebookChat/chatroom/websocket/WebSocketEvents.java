@@ -3,11 +3,14 @@ package br.com.jorgeacetozi.ebookChat.chatroom.websocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.ChatRoomUser;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.service.ChatRoomService;
 
+@Component
 public class WebSocketEvents {
 
 	@Autowired
