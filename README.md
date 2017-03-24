@@ -1,9 +1,11 @@
-# Free eBook: Building a Real-Time Chat Application with Spring Boot, WebSocket, Cassandra, Redis and RabbitMQ
+# Building a Real-Time Chat Application with Spring Boot, WebSocket, Cassandra, Redis and RabbitMQ
 
 ![eBook Chat Application](/images/ebook-chat-application.png)
 
-# Download the free eBook explaining step-by-step the code for ebook-chat project:
+## Check my eBook for a step-by-step code guide for the `ebook-chat` project:
 - https://leanpub.com/building-a-real-time-chat-application-with-spring-boot-websocket-cassandra-redis-and-rabbitmq
+
+**There is a sample book version available for download on the above link as well. It has 80 pages and brings many interesting topics like Introduction to NoSQL, Cassandra, Redis, Spring Boot, Spring Data and Introduction to WebSockets and STOMP protocol**.
 
 # Technologies used in this project
 
@@ -18,6 +20,7 @@
 - MySQL
 - JUnit, Mockito and TestContainers (spin up Docker containers for Integration Tests)
 - Thymeleaf, JQuery and Bootstrap
+- Apache Maven (Surefire and Failsafe plugins)
 
 # Setting up this project locally
 
