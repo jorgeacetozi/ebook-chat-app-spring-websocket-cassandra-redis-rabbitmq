@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.ChatRoom;
-import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.ChatRoomUser;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.model.InstantMessage;
 import br.com.jorgeacetozi.ebookChat.chatroom.domain.repository.InstantMessageRepository;
 
@@ -23,10 +22,11 @@ public class CassandraInstantMessageService implements InstantMessageService {
 	public void appendInstantMessageToConversations(InstantMessage instantMessage) {
 		if (instantMessage.isFromAdmin() || instantMessage.isPublic()) {
 			ChatRoom chatRoom = chatRoomService.findById(instantMessage.getChatRoomId());
-			for (ChatRoomUser connectedUser : chatRoom.getConnectedUsers()) {
+			
+			chatRoom.getConnectedUsers().forEach(connectedUser -> {
 				instantMessage.appendToUserConversation(connectedUser.getUsername());
 				instantMessageRepository.save(instantMessage);
-			}
+			});
 		} else {
 			instantMessage.appendToUserConversation(instantMessage.getFromUser());
 			instantMessageRepository.save(instantMessage);
