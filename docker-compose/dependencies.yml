@@ -8,7 +8,6 @@ services:
     image: "cassandra:3.0"
     ports:
       - "9042:9042"
-    network_mode: "host"
   mysql:
     image: "mysql:5.7"
     ports:
