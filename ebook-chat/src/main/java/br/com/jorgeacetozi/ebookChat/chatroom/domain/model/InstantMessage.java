@@ -36,9 +36,6 @@ public class InstantMessage {
 	public boolean isFromAdmin() {
 		return this.fromUser.equals(SystemUsers.ADMIN.getUsername());
 	}
-	public void appendToUserConversation(String username) {
-		this.username = username;
-	}
 	public String getUsername() {
 		return username;
 	}
