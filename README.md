@@ -1,13 +1,8 @@
-# Building a Real-Time Chat Application with Spring Boot, WebSocket, Cassandra, Redis and RabbitMQ
+# [Pro Java Clustering and Scalability: Building Real-Time Apps with Spring, Cassandra, Redis, WebSocket and RabbitMQ](http://a.co/49CPIhv)
 
 ![Chat Application](/images/ebook-chat-application.png)
 
-## Check my eBook for a step-by-step code guide for the `ebook-chat` project:
-- https://leanpub.com/building-a-real-time-chat-application-with-spring-boot-websocket-cassandra-redis-and-rabbitmq
-
-**There is a sample book version available for download on the above link as well. It has 80 pages and brings many interesting topics like Introduction to NoSQL, Cassandra, Redis, Spring Boot, Spring Data and Introduction to WebSockets and STOMP protocol**.
-
-![eBook Chat Application](/images/title_page.png)
+![Pro Java Clustering and Scalability](/images/pro_java_clustering_scalability.jpeg)
 
 # Technologies used in this project
 
