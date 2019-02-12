@@ -24,21 +24,27 @@
 > **Note:**
 The fastest way to get this application up and running locally is using **Docker** and **Docker Compose**.  Be sure that you have at least **Docker 1.13.0** and **Docker Compose 1.11.2** installed on your machine.
 
-1. Clone this repository
+1. Clone this repository:
 ```shell
-$ git clone git@github.com:jorgeacetozi/ebook-chat-app-spring-websocket-cassandra-redis-rabbitmq.git
+$ git clone https://github.com/jorgeacetozi/ebook-chat-app-spring-websocket-cassandra-redis-rabbitmq.git
 ```
-2. Setup the dependencies (Cassandra, Redis, MySQL and RabbitMQ with STOMP support)
 
+2. Enter the repository directory:
+```shell
+$ cd ebook-chat-app-spring-websocket-cassandra-redis-rabbitmq
+```
+
+3. Set up the dependencies (Cassandra, Redis, MySQL and RabbitMQ with STOMP support):
 ```shell
 $ docker-compose -f docker-compose/dependencies.yml up
 ```
 
-3. Start the application
-
+4. Download and start the application:
 ```shell
 $ wget https://github.com/jorgeacetozi/ebook-chat-app-spring-websocket-cassandra-redis/releases/download/ebook-chat-1.0.0/ebook-chat-1.0.0.jar && java -jar ebook-chat-1.0.0.jar
 ```
+
+5. Navigate to `http://localhost:8080` and have fun!
 
 # Basic Usage
 
